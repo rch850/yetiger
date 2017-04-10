@@ -29,8 +29,7 @@ window.onload = function() {
         var y = 80;
 
         for (var i = 0; i < 9; i++) {
-            var fwfw = game.add.text(game.world.randomX, y, game.rnd.pick(CALLS), {fill: '#FFFFFF'}, calls);
-            fwfw.body.velocity.x = game.rnd.between(-100, -300);
+            addCall(y);
             y += 48;
         }
 
@@ -48,8 +47,7 @@ window.onload = function() {
 
         if (game.physics.arcade.distanceBetween(player, ie) <= 50) {
             // clear
-            var fwfw = game.add.text(game.world.randomX, game.rnd.between(80, 334), game.rnd.pick(CALLS), {fill: '#FFFFFF'}, calls);
-            fwfw.body.velocity.x = game.rnd.between(-100, -300);
+            addCall(game.rnd.between(80, 334));
             player.x = 400;
             player.y = 32;
         }
@@ -83,5 +81,10 @@ window.onload = function() {
     function collisionHandler (player, call) {
         player.x = 400;
         player.y = 32;
+    }
+
+    function addCall(y: number) {
+        var fwfw = game.add.text(game.world.randomX, y, game.rnd.pick(CALLS), {fill: '#FFFFFF'}, calls);
+        fwfw.body.velocity.x = game.rnd.between(-100, -300);
     }
 };
