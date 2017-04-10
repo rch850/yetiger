@@ -61,6 +61,8 @@ window.onload = function () {
     function addCall(y) {
         var fwfw = game.add.text(game.world.randomX, y, game.rnd.pick(CALLS), { fill: '#FFFFFF' }, calls);
         fwfw.body.velocity.x = game.rnd.between(-100, -300);
+        // make physics body smaller than text.
+        fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
     }
 };
 //# sourceMappingURL=app.js.map
