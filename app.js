@@ -17,7 +17,7 @@ window.onload = function () {
         var y = 80;
         for (var i = 0; i < 9; i++) {
             var fwfw = game.add.text(game.world.randomX, y, game.rnd.pick(CALLS), { fill: '#FFFFFF' }, calls);
-            fwfw.body.velocity.x = game.rnd.between(100, 300);
+            fwfw.body.velocity.x = game.rnd.between(-100, -300);
             y += 48;
         }
         player = game.add.sprite(400, 32, 'tiger');
@@ -30,7 +30,7 @@ window.onload = function () {
         if (game.physics.arcade.distanceBetween(player, ie) <= 50) {
             // clear
             var fwfw = game.add.text(game.world.randomX, game.rnd.between(80, 334), game.rnd.pick(CALLS), { fill: '#FFFFFF' }, calls);
-            fwfw.body.velocity.x = game.rnd.between(100, 300);
+            fwfw.body.velocity.x = game.rnd.between(-100, -300);
             player.x = 400;
             player.y = 32;
         }
@@ -52,8 +52,8 @@ window.onload = function () {
         }
     }
     function loopCall(call) {
-        if (call.x > 800) {
-            call.x = -call.width;
+        if (call.x < -call.width) {
+            call.x = 800;
         }
     }
     function collisionHandler(player, call) {
