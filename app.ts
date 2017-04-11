@@ -1,92 +1,96 @@
 /// <reference path="typings/phaser.d.ts"/>
 
-window.onload = function() {
+const CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはいはい', 'おーーーっはい', 'フッフー'];
 
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example',
-        { preload: preload, create: create, update: update });
+class MainGame extends Phaser.State {
 
-    var player, ie, calls;
-    var cursors;
+    player: Phaser.Sprite;
+    ie: Phaser.Sprite;
+    calls: Phaser.Group;
 
-    var CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはいはい', 'おーーーっはい', 'フッフー'];
+    cursors: Phaser.CursorKeys;
 
-    function preload() {
-        game.load.image('ie', 'ie.png');
-        game.load.image('tiger', 'tiger.png');
+    preload() {
+        this.load.image('ie', 'ie.png');
+        this.load.image('tiger', 'tiger.png');
     }
 
-    function create() {
+    create() {
 
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.physics.startSystem(Phaser.Physics.ARCADE);
 
-        game.stage.backgroundColor = '#2d2d2d';
+        this.stage.backgroundColor = '#2d2d2d';
 
-        ie = game.add.sprite(400, 600-80, 'ie');
-        ie.anchor.set(0.5);
+        this.ie = this.add.sprite(400, 600-80, 'ie');
+        this.ie.anchor.set(0.5);
 
-        calls = game.add.physicsGroup();
+        this.calls = this.add.physicsGroup();
 
         var y = 80;
 
         for (var i = 0; i < 9; i++) {
-            addCall(y);
+            this.addCall(y);
             y += 48;
         }
 
-        player = game.add.sprite(400, 32, 'tiger');
-        player.width = player.height = 80;
-        player.anchor.set(0.5);
+        this.player = this.add.sprite(400, 32, 'tiger');
+        this.player.width = this.player.height = 80;
+        this.player.anchor.set(0.5);
 
-        game.physics.arcade.enable(player);
+        this.physics.arcade.enable(this.player);
 
-        cursors = game.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
 
     }
 
-    function update() {
+    update() {
 
-        if (game.physics.arcade.distanceBetween(player, ie) <= 50) {
+        if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 50) {
             // clear
-            addCall(game.rnd.between(80, 334));
-            player.x = 400;
-            player.y = 32;
+            this.addCall(this.rnd.between(80, 334));
+            this.player.x = 400;
+            this.player.y = 32;
         }
 
-        calls.forEach(loopCall, this);
+        this.calls.forEach(this.loopCall, this);
 
-        game.physics.arcade.overlap(player, calls, collisionHandler, null, this);
+        this.physics.arcade.overlap(this.player, this.calls, this.collisionHandler, null, this);
 
-        player.body.velocity.x = 0;
-        player.body.velocity.y = 0;
+        this.player.body.velocity.x = 0;
+        this.player.body.velocity.y = 0;
 
-        if (cursors.left.isDown) {
-            player.body.velocity.x = -200;
-        } else if (cursors.right.isDown) {
-            player.body.velocity.x = 200;
+        if (this.cursors.left.isDown) {
+            this.player.body.velocity.x = -200;
+        } else if (this.cursors.right.isDown) {
+            this.player.body.velocity.x = 200;
         }
 
-        if (cursors.up.isDown) {
-            player.body.velocity.y = -200;
-        } else if (cursors.down.isDown) {
-            player.body.velocity.y = 200;
+        if (this.cursors.up.isDown) {
+            this.player.body.velocity.y = -200;
+        } else if (this.cursors.down.isDown) {
+            this.player.body.velocity.y = 200;
         }
     }
 
-    function loopCall (call) {
+    loopCall(call) {
         if (call.x < -call.width) {
             call.x = 800;
         }
     }
 
-    function collisionHandler (player, call) {
+    collisionHandler(player, call) {
         player.x = 400;
         player.y = 32;
     }
 
-    function addCall(y: number) {
-        var fwfw = game.add.text(game.world.randomX, y, game.rnd.pick(CALLS), {fill: '#FFFFFF'}, calls);
-        fwfw.body.velocity.x = game.rnd.between(-100, -300);
+    addCall(y: number) {
+        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), {fill: '#FFFFFF'}, this.calls);
+        fwfw.body.velocity.x = this.rnd.between(-100, -300);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
     }
+}
+
+window.onload = function() {
+    const game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', MainGame);
 };

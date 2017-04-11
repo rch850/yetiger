@@ -1,68 +1,83 @@
 /// <reference path="typings/phaser.d.ts"/>
-window.onload = function () {
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
-    var player, ie, calls;
-    var cursors;
-    var CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはいはい', 'おーーーっはい', 'フッフー'];
-    function preload() {
-        game.load.image('ie', 'ie.png');
-        game.load.image('tiger', 'tiger.png');
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはいはい', 'おーーーっはい', 'フッフー'];
+var MainGame = (function (_super) {
+    __extends(MainGame, _super);
+    function MainGame() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    function create() {
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.stage.backgroundColor = '#2d2d2d';
-        ie = game.add.sprite(400, 600 - 80, 'ie');
-        ie.anchor.set(0.5);
-        calls = game.add.physicsGroup();
+    MainGame.prototype.preload = function () {
+        this.load.image('ie', 'ie.png');
+        this.load.image('tiger', 'tiger.png');
+    };
+    MainGame.prototype.create = function () {
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        this.stage.backgroundColor = '#2d2d2d';
+        this.ie = this.add.sprite(400, 600 - 80, 'ie');
+        this.ie.anchor.set(0.5);
+        this.calls = this.add.physicsGroup();
         var y = 80;
         for (var i = 0; i < 9; i++) {
-            addCall(y);
+            this.addCall(y);
             y += 48;
         }
-        player = game.add.sprite(400, 32, 'tiger');
-        player.width = player.height = 80;
-        player.anchor.set(0.5);
-        game.physics.arcade.enable(player);
-        cursors = game.input.keyboard.createCursorKeys();
-    }
-    function update() {
-        if (game.physics.arcade.distanceBetween(player, ie) <= 50) {
+        this.player = this.add.sprite(400, 32, 'tiger');
+        this.player.width = this.player.height = 80;
+        this.player.anchor.set(0.5);
+        this.physics.arcade.enable(this.player);
+        this.cursors = this.input.keyboard.createCursorKeys();
+    };
+    MainGame.prototype.update = function () {
+        if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 50) {
             // clear
-            addCall(game.rnd.between(80, 334));
-            player.x = 400;
-            player.y = 32;
+            this.addCall(this.rnd.between(80, 334));
+            this.player.x = 400;
+            this.player.y = 32;
         }
-        calls.forEach(loopCall, this);
-        game.physics.arcade.overlap(player, calls, collisionHandler, null, this);
-        player.body.velocity.x = 0;
-        player.body.velocity.y = 0;
-        if (cursors.left.isDown) {
-            player.body.velocity.x = -200;
+        this.calls.forEach(this.loopCall, this);
+        this.physics.arcade.overlap(this.player, this.calls, this.collisionHandler, null, this);
+        this.player.body.velocity.x = 0;
+        this.player.body.velocity.y = 0;
+        if (this.cursors.left.isDown) {
+            this.player.body.velocity.x = -200;
         }
-        else if (cursors.right.isDown) {
-            player.body.velocity.x = 200;
+        else if (this.cursors.right.isDown) {
+            this.player.body.velocity.x = 200;
         }
-        if (cursors.up.isDown) {
-            player.body.velocity.y = -200;
+        if (this.cursors.up.isDown) {
+            this.player.body.velocity.y = -200;
         }
-        else if (cursors.down.isDown) {
-            player.body.velocity.y = 200;
+        else if (this.cursors.down.isDown) {
+            this.player.body.velocity.y = 200;
         }
-    }
-    function loopCall(call) {
+    };
+    MainGame.prototype.loopCall = function (call) {
         if (call.x < -call.width) {
             call.x = 800;
         }
-    }
-    function collisionHandler(player, call) {
+    };
+    MainGame.prototype.collisionHandler = function (player, call) {
         player.x = 400;
         player.y = 32;
-    }
-    function addCall(y) {
-        var fwfw = game.add.text(game.world.randomX, y, game.rnd.pick(CALLS), { fill: '#FFFFFF' }, calls);
-        fwfw.body.velocity.x = game.rnd.between(-100, -300);
+    };
+    MainGame.prototype.addCall = function (y) {
+        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), { fill: '#FFFFFF' }, this.calls);
+        fwfw.body.velocity.x = this.rnd.between(-100, -300);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
-    }
+    };
+    return MainGame;
+}(Phaser.State));
+window.onload = function () {
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', MainGame);
 };
 //# sourceMappingURL=app.js.map
