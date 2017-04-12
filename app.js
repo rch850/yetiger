@@ -10,6 +10,24 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはいはい', 'おーーーっはい', 'フッフー'];
+var Title = (function (_super) {
+    __extends(Title, _super);
+    function Title() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Title.prototype.create = function () {
+        this.add.text(100, 100, "イェッタイガーゲーム", { fill: '#fff' });
+        this.add.text(100, 200, "方向キーでタイガーを操作してイェッに帰そう", { fill: '#fff' });
+        this.add.text(100, 250, "飛んでくる文字に当たるとゲームオーバー", { fill: '#fff' });
+        this.add.text(100, 300, "エンターでスタート", { fill: '#fff' });
+    };
+    Title.prototype.update = function () {
+        if (this.input.keyboard.isDown(Phaser.KeyCode.ENTER)) {
+            this.state.start('MainGame');
+        }
+    };
+    return Title;
+}(Phaser.State));
 var MainGame = (function (_super) {
     __extends(MainGame, _super);
     function MainGame() {
@@ -78,6 +96,7 @@ var MainGame = (function (_super) {
     return MainGame;
 }(Phaser.State));
 window.onload = function () {
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', MainGame);
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', Title);
+    game.state.add('MainGame', MainGame);
 };
 //# sourceMappingURL=app.js.map

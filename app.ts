@@ -2,6 +2,23 @@
 
 const CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはいはい', 'おーーーっはい', 'フッフー'];
 
+class Title extends Phaser.State {
+
+    create() {
+        this.add.text(100, 100, "イェッタイガーゲーム", {fill: '#fff'});
+        this.add.text(100, 200, "方向キーでタイガーを操作してイェッに帰そう", {fill: '#fff'});
+        this.add.text(100, 250, "飛んでくる文字に当たるとゲームオーバー", {fill: '#fff'});
+        this.add.text(100, 300, "エンターでスタート", {fill: '#fff'});
+    }
+
+    update() {
+        if (this.input.keyboard.isDown(Phaser.KeyCode.ENTER)) {
+            this.state.start('MainGame');
+        }
+    }
+
+}
+
 class MainGame extends Phaser.State {
 
     player: Phaser.Sprite;
@@ -92,5 +109,6 @@ class MainGame extends Phaser.State {
 }
 
 window.onload = function() {
-    const game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', MainGame);
+    const game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', Title);
+    game.state.add('MainGame', MainGame);
 };
