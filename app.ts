@@ -8,11 +8,12 @@ class Title extends Phaser.State {
         this.add.text(100, 100, "イェッタイガーゲーム", {fill: '#fff'});
         this.add.text(100, 200, "方向キーでタイガーを操作してイェッに帰そう", {fill: '#fff'});
         this.add.text(100, 250, "飛んでくる文字に当たるとゲームオーバー", {fill: '#fff'});
-        this.add.text(100, 300, "エンターでスタート", {fill: '#fff'});
+        this.add.text(100, 300, "エンターかタップでスタート", {fill: '#fff'});
     }
 
     update() {
-        if (this.input.keyboard.isDown(Phaser.KeyCode.ENTER)) {
+        if (this.input.keyboard.isDown(Phaser.KeyCode.ENTER) ||
+                this.input.activePointer.isDown) {
             this.state.start('MainGame');
         }
     }
@@ -76,15 +77,17 @@ class MainGame extends Phaser.State {
         this.player.body.velocity.x = 0;
         this.player.body.velocity.y = 0;
 
-        if (this.cursors.left.isDown) {
+        const pointerDir = this.getPointerDirection();
+
+        if (this.cursors.left.isDown || pointerDir.left) {
             this.player.body.velocity.x = -200;
-        } else if (this.cursors.right.isDown) {
+        } else if (this.cursors.right.isDown || pointerDir.right) {
             this.player.body.velocity.x = 200;
         }
 
-        if (this.cursors.up.isDown) {
+        if (this.cursors.up.isDown || pointerDir.up) {
             this.player.body.velocity.y = -200;
-        } else if (this.cursors.down.isDown) {
+        } else if (this.cursors.down.isDown || pointerDir.down) {
             this.player.body.velocity.y = 200;
         }
     }
@@ -105,6 +108,19 @@ class MainGame extends Phaser.State {
         fwfw.body.velocity.x = this.rnd.between(-100, -300);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
+    }
+
+    getPointerDirection() {
+        const dx = this.input.activePointer.x - this.player.x;
+        const dy = this.input.activePointer.y - this.player.y;
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        const isDown = this.input.activePointer.isDown;
+        return {
+            left: isDown && (angle >= 120 || angle <= -120),
+            right: isDown && (-60 <= angle && angle <= 60),
+            down: isDown && (30 <= angle && angle <= 150),
+            up: isDown && (-150 <= angle && angle <= -30)
+        };
     }
 }
 
