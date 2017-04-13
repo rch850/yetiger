@@ -5,10 +5,14 @@ const CALLS = ['フワフワフワフワ', 'はーいはーいはいはいはい
 class Title extends Phaser.State {
 
     create() {
-        this.add.text(100, 100, "イェッタイガーゲーム", {fill: '#fff'});
-        this.add.text(100, 200, "方向キーでタイガーを操作してイェッに帰そう", {fill: '#fff'});
-        this.add.text(100, 250, "飛んでくる文字に当たるとゲームオーバー", {fill: '#fff'});
-        this.add.text(100, 300, "エンターかタップでスタート", {fill: '#fff'});
+        this.stage.backgroundColor = '#4a8011';
+
+        const titleStyle = {fontSize: '20pt', fill: '#fff'};
+        const textStyle = {fontSize: '12pt', fill: '#fff'};
+        this.add.text(10, 100, "イェッタイガーゲーム", titleStyle);
+        this.add.text(10, 200, "方向キーでタイガーを操作して\nイェッに帰そう。\n\n" +
+            "飛んでくる文字に当たるとゲームオーバー\n\n" +
+            "エンターかタップでスタート", textStyle);
     }
 
     update() {
@@ -37,22 +41,20 @@ class MainGame extends Phaser.State {
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.stage.backgroundColor = '#2d2d2d';
-
-        this.ie = this.add.sprite(400, 600-80, 'ie');
+        this.ie = this.add.sprite(160, 480-80, 'ie');
+        this.ie.width = this.ie.height = 80;
         this.ie.anchor.set(0.5);
 
         this.calls = this.add.physicsGroup();
 
         var y = 80;
-
         for (var i = 0; i < 9; i++) {
             this.addCall(y);
-            y += 48;
+            y += 30;
         }
 
-        this.player = this.add.sprite(400, 32, 'tiger');
-        this.player.width = this.player.height = 80;
+        this.player = this.add.sprite(160, 20, 'tiger');
+        this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
 
         this.physics.arcade.enable(this.player);
@@ -63,11 +65,11 @@ class MainGame extends Phaser.State {
 
     update() {
 
-        if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 50) {
+        if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 20) {
             // clear
-            this.addCall(this.rnd.between(80, 334));
-            this.player.x = 400;
-            this.player.y = 32;
+            this.addCall(this.rnd.between(80, 320));
+            this.player.x = 160;
+            this.player.y = 20;
         }
 
         this.calls.forEach(this.loopCall, this);
@@ -80,32 +82,32 @@ class MainGame extends Phaser.State {
         const pointerDir = this.getPointerDirection();
 
         if (this.cursors.left.isDown || pointerDir.left) {
-            this.player.body.velocity.x = -200;
+            this.player.body.velocity.x = -100;
         } else if (this.cursors.right.isDown || pointerDir.right) {
-            this.player.body.velocity.x = 200;
+            this.player.body.velocity.x = 100;
         }
 
         if (this.cursors.up.isDown || pointerDir.up) {
-            this.player.body.velocity.y = -200;
+            this.player.body.velocity.y = -100;
         } else if (this.cursors.down.isDown || pointerDir.down) {
-            this.player.body.velocity.y = 200;
+            this.player.body.velocity.y = 100;
         }
     }
 
     loopCall(call) {
         if (call.x < -call.width) {
-            call.x = 800;
+            call.x = 320;
         }
     }
 
     collisionHandler(player, call) {
-        player.x = 400;
-        player.y = 32;
+        player.x = 160;
+        player.y = 20;
     }
 
     addCall(y: number) {
-        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), {fill: '#FFFFFF'}, this.calls);
-        fwfw.body.velocity.x = this.rnd.between(-100, -300);
+        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), {fontSize: '12pt', fill: '#FFFFFF'}, this.calls);
+        fwfw.body.velocity.x = this.rnd.between(-50, -150);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
     }
@@ -125,6 +127,6 @@ class MainGame extends Phaser.State {
 }
 
 window.onload = function() {
-    const game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', Title);
+    const game = new Phaser.Game(320, 480, Phaser.CANVAS, 'phaser-example', Title);
     game.state.add('MainGame', MainGame);
 };

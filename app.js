@@ -16,10 +16,13 @@ var Title = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Title.prototype.create = function () {
-        this.add.text(100, 100, "イェッタイガーゲーム", { fill: '#fff' });
-        this.add.text(100, 200, "方向キーでタイガーを操作してイェッに帰そう", { fill: '#fff' });
-        this.add.text(100, 250, "飛んでくる文字に当たるとゲームオーバー", { fill: '#fff' });
-        this.add.text(100, 300, "エンターかタップでスタート", { fill: '#fff' });
+        this.stage.backgroundColor = '#4a8011';
+        var titleStyle = { fontSize: '20pt', fill: '#fff' };
+        var textStyle = { fontSize: '12pt', fill: '#fff' };
+        this.add.text(10, 100, "イェッタイガーゲーム", titleStyle);
+        this.add.text(10, 200, "方向キーでタイガーを操作して\nイェッに帰そう。\n\n" +
+            "飛んでくる文字に当たるとゲームオーバー\n\n" +
+            "エンターかタップでスタート", textStyle);
     };
     Title.prototype.update = function () {
         if (this.input.keyboard.isDown(Phaser.KeyCode.ENTER) ||
@@ -40,27 +43,27 @@ var MainGame = (function (_super) {
     };
     MainGame.prototype.create = function () {
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.stage.backgroundColor = '#2d2d2d';
-        this.ie = this.add.sprite(400, 600 - 80, 'ie');
+        this.ie = this.add.sprite(160, 480 - 80, 'ie');
+        this.ie.width = this.ie.height = 80;
         this.ie.anchor.set(0.5);
         this.calls = this.add.physicsGroup();
         var y = 80;
         for (var i = 0; i < 9; i++) {
             this.addCall(y);
-            y += 48;
+            y += 30;
         }
-        this.player = this.add.sprite(400, 32, 'tiger');
-        this.player.width = this.player.height = 80;
+        this.player = this.add.sprite(160, 20, 'tiger');
+        this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
         this.physics.arcade.enable(this.player);
         this.cursors = this.input.keyboard.createCursorKeys();
     };
     MainGame.prototype.update = function () {
-        if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 50) {
+        if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 20) {
             // clear
-            this.addCall(this.rnd.between(80, 334));
-            this.player.x = 400;
-            this.player.y = 32;
+            this.addCall(this.rnd.between(80, 320));
+            this.player.x = 160;
+            this.player.y = 20;
         }
         this.calls.forEach(this.loopCall, this);
         this.physics.arcade.overlap(this.player, this.calls, this.collisionHandler, null, this);
@@ -68,30 +71,30 @@ var MainGame = (function (_super) {
         this.player.body.velocity.y = 0;
         var pointerDir = this.getPointerDirection();
         if (this.cursors.left.isDown || pointerDir.left) {
-            this.player.body.velocity.x = -200;
+            this.player.body.velocity.x = -100;
         }
         else if (this.cursors.right.isDown || pointerDir.right) {
-            this.player.body.velocity.x = 200;
+            this.player.body.velocity.x = 100;
         }
         if (this.cursors.up.isDown || pointerDir.up) {
-            this.player.body.velocity.y = -200;
+            this.player.body.velocity.y = -100;
         }
         else if (this.cursors.down.isDown || pointerDir.down) {
-            this.player.body.velocity.y = 200;
+            this.player.body.velocity.y = 100;
         }
     };
     MainGame.prototype.loopCall = function (call) {
         if (call.x < -call.width) {
-            call.x = 800;
+            call.x = 320;
         }
     };
     MainGame.prototype.collisionHandler = function (player, call) {
-        player.x = 400;
-        player.y = 32;
+        player.x = 160;
+        player.y = 20;
     };
     MainGame.prototype.addCall = function (y) {
-        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), { fill: '#FFFFFF' }, this.calls);
-        fwfw.body.velocity.x = this.rnd.between(-100, -300);
+        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), { fontSize: '12pt', fill: '#FFFFFF' }, this.calls);
+        fwfw.body.velocity.x = this.rnd.between(-50, -150);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
     };
@@ -110,7 +113,7 @@ var MainGame = (function (_super) {
     return MainGame;
 }(Phaser.State));
 window.onload = function () {
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', Title);
+    var game = new Phaser.Game(320, 480, Phaser.CANVAS, 'phaser-example', Title);
     game.state.add('MainGame', MainGame);
 };
 //# sourceMappingURL=app.js.map
