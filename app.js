@@ -35,7 +35,9 @@ var Title = (function (_super) {
 var MainGame = (function (_super) {
     __extends(MainGame, _super);
     function MainGame() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.score = 0;
+        return _this;
     }
     MainGame.prototype.preload = function () {
         this.load.image('ie', 'ie.png');
@@ -55,6 +57,8 @@ var MainGame = (function (_super) {
         this.player = this.add.sprite(160, 20, 'tiger');
         this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
+        this.scoreText = this.add.text(0, 0, this.score + " タイガー", { fontSize: '14pt', fill: '#fff', boundsAlignH: 'right' });
+        this.scoreText.setTextBounds(200, 10, 110);
         this.physics.arcade.enable(this.player);
         this.cursors = this.input.keyboard.createCursorKeys();
     };
@@ -64,6 +68,8 @@ var MainGame = (function (_super) {
             this.addCall(this.rnd.between(80, 320));
             this.player.x = 160;
             this.player.y = 20;
+            this.score++;
+            this.scoreText.text = this.score + " タイガー";
         }
         this.calls.forEach(this.loopCall, this);
         this.physics.arcade.overlap(this.player, this.calls, this.collisionHandler, null, this);

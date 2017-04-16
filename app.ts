@@ -29,6 +29,8 @@ class MainGame extends Phaser.State {
     player: Phaser.Sprite;
     ie: Phaser.Sprite;
     calls: Phaser.Group;
+    score = 0;
+    scoreText: Phaser.Text;
 
     cursors: Phaser.CursorKeys;
 
@@ -57,6 +59,9 @@ class MainGame extends Phaser.State {
         this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
 
+        this.scoreText = this.add.text(0, 0, this.score + " タイガー", {fontSize: '14pt', fill: '#fff', boundsAlignH: 'right'});
+        this.scoreText.setTextBounds(200, 10, 110);
+
         this.physics.arcade.enable(this.player);
 
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -70,6 +75,8 @@ class MainGame extends Phaser.State {
             this.addCall(this.rnd.between(80, 320));
             this.player.x = 160;
             this.player.y = 20;
+            this.score++;
+            this.scoreText.text = this.score + " タイガー";
         }
 
         this.calls.forEach(this.loopCall, this);
