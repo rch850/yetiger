@@ -29,6 +29,7 @@ class MainGame extends Phaser.State {
     player: Phaser.Sprite;
     ie: Phaser.Sprite;
     calls: Phaser.Group;
+    lives: Phaser.Sprite[];
     score = 0;
     scoreText: Phaser.Text;
 
@@ -58,6 +59,13 @@ class MainGame extends Phaser.State {
         this.player = this.add.sprite(160, 20, 'tiger');
         this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
+
+        this.lives = [];
+        for (let i = 0; i < 3; i++) {
+            let life = this.add.sprite(240 + 25 * i, 40, 'tiger');
+            life.width = life.height = 20;
+            this.lives.push(life);
+        }
 
         this.scoreText = this.add.text(0, 0, this.score + " タイガー", {fontSize: '14pt', fill: '#fff', boundsAlignH: 'right'});
         this.scoreText.setTextBounds(200, 10, 110);
@@ -110,6 +118,12 @@ class MainGame extends Phaser.State {
     collisionHandler(player, call) {
         player.x = 160;
         player.y = 20;
+
+        this.lives.shift().destroy();
+        if (this.lives.length <= 0) {
+            // game over
+            this.state.start('Title');
+        }
     }
 
     addCall(y: number) {
@@ -134,6 +148,8 @@ class MainGame extends Phaser.State {
 }
 
 window.onload = function() {
-    const game = new Phaser.Game(320, 480, Phaser.CANVAS, 'phaser-example', Title);
+    const game = new Phaser.Game(320, 480, Phaser.CANVAS, 'phaser-example');
+    game.state.add('Title', Title);
     game.state.add('MainGame', MainGame);
+    game.state.start('Title');
 };

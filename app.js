@@ -57,6 +57,12 @@ var MainGame = (function (_super) {
         this.player = this.add.sprite(160, 20, 'tiger');
         this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
+        this.lives = [];
+        for (var i_1 = 0; i_1 < 3; i_1++) {
+            var life = this.add.sprite(240 + 25 * i_1, 40, 'tiger');
+            life.width = life.height = 20;
+            this.lives.push(life);
+        }
         this.scoreText = this.add.text(0, 0, this.score + " タイガー", { fontSize: '14pt', fill: '#fff', boundsAlignH: 'right' });
         this.scoreText.setTextBounds(200, 10, 110);
         this.physics.arcade.enable(this.player);
@@ -97,6 +103,11 @@ var MainGame = (function (_super) {
     MainGame.prototype.collisionHandler = function (player, call) {
         player.x = 160;
         player.y = 20;
+        this.lives.shift().destroy();
+        if (this.lives.length <= 0) {
+            // game over
+            this.state.start('Title');
+        }
     };
     MainGame.prototype.addCall = function (y) {
         var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), { fontSize: '12pt', fill: '#FFFFFF' }, this.calls);
@@ -119,7 +130,9 @@ var MainGame = (function (_super) {
     return MainGame;
 }(Phaser.State));
 window.onload = function () {
-    var game = new Phaser.Game(320, 480, Phaser.CANVAS, 'phaser-example', Title);
+    var game = new Phaser.Game(320, 480, Phaser.CANVAS, 'phaser-example');
+    game.state.add('Title', Title);
     game.state.add('MainGame', MainGame);
+    game.state.start('Title');
 };
 //# sourceMappingURL=app.js.map
