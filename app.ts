@@ -134,8 +134,8 @@ class MainGame extends Phaser.State {
     }
 
     getPointerDirection() {
-        const dx = this.input.activePointer.x - this.player.x;
-        const dy = this.input.activePointer.y - this.player.y;
+        const dx = this.input.activePointer.x - this.ie.x;
+        const dy = this.input.activePointer.y - this.ie.y;
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         const isDown = this.input.activePointer.isDown;
         return {

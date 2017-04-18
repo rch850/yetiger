@@ -116,8 +116,8 @@ var MainGame = (function (_super) {
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
     };
     MainGame.prototype.getPointerDirection = function () {
-        var dx = this.input.activePointer.x - this.player.x;
-        var dy = this.input.activePointer.y - this.player.y;
+        var dx = this.input.activePointer.x - this.ie.x;
+        var dy = this.input.activePointer.y - this.ie.y;
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;
         var isDown = this.input.activePointer.isDown;
         return {
