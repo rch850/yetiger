@@ -50,16 +50,16 @@ var MainGame = (function (_super) {
         this.ie.anchor.set(0.5);
         this.calls = this.add.physicsGroup();
         var y = 80;
-        for (var i = 0; i < 9; i++) {
-            this.addCall(y);
-            y += 30;
+        for (var i = 0; i < 5; i++) {
+            this.addCall(this.world.randomX, y);
+            y += 60;
         }
         this.player = this.add.sprite(160, 20, 'tiger');
         this.player.width = this.player.height = 40;
         this.player.anchor.set(0.5);
         this.lives = [];
-        for (var i_1 = 0; i_1 < 3; i_1++) {
-            var life = this.add.sprite(240 + 25 * i_1, 40, 'tiger');
+        for (var i = 0; i < 3; i++) {
+            var life = this.add.sprite(240 + 25 * i, 40, 'tiger');
             life.width = life.height = 20;
             this.lives.push(life);
         }
@@ -71,7 +71,7 @@ var MainGame = (function (_super) {
     MainGame.prototype.update = function () {
         if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 20) {
             // clear
-            this.addCall(this.rnd.between(80, 320));
+            this.addCall(320, this.rnd.between(80, 320));
             this.player.x = 160;
             this.player.y = 20;
             this.score++;
@@ -109,8 +109,8 @@ var MainGame = (function (_super) {
             this.state.start('Title');
         }
     };
-    MainGame.prototype.addCall = function (y) {
-        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), { fontSize: '12pt', fill: '#FFFFFF' }, this.calls);
+    MainGame.prototype.addCall = function (x, y) {
+        var fwfw = this.add.text(x, y, this.rnd.pick(CALLS), { fontSize: '12pt', fill: '#FFFFFF' }, this.calls);
         fwfw.body.velocity.x = this.rnd.between(-50, -150);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);

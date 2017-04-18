@@ -51,9 +51,9 @@ class MainGame extends Phaser.State {
         this.calls = this.add.physicsGroup();
 
         var y = 80;
-        for (var i = 0; i < 9; i++) {
-            this.addCall(y);
-            y += 30;
+        for (let i = 0; i < 5; i++) {
+            this.addCall(this.world.randomX, y);
+            y += 60;
         }
 
         this.player = this.add.sprite(160, 20, 'tiger');
@@ -80,7 +80,7 @@ class MainGame extends Phaser.State {
 
         if (this.physics.arcade.distanceBetween(this.player, this.ie) <= 20) {
             // clear
-            this.addCall(this.rnd.between(80, 320));
+            this.addCall(320, this.rnd.between(80, 320));
             this.player.x = 160;
             this.player.y = 20;
             this.score++;
@@ -126,8 +126,8 @@ class MainGame extends Phaser.State {
         }
     }
 
-    addCall(y: number) {
-        var fwfw = this.add.text(this.world.randomX, y, this.rnd.pick(CALLS), {fontSize: '12pt', fill: '#FFFFFF'}, this.calls);
+    addCall(x: number, y: number) {
+        var fwfw = this.add.text(x, y, this.rnd.pick(CALLS), {fontSize: '12pt', fill: '#FFFFFF'}, this.calls);
         fwfw.body.velocity.x = this.rnd.between(-50, -150);
         // make physics body smaller than text.
         fwfw.body.setSize(fwfw.width - 40, fwfw.height - 40, 20, 20);
